@@ -17,9 +17,9 @@ def login(username: str = Form(...), password: str = Form(...)):
     conn = db.get_db()
     cursor = conn.cursor()
 
-    # 🚨 SQL Injection
-    query = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
-    cursor.execute(query)
+    # Use parameterized query to prevent SQL injection
+    query = "SELECT * FROM users WHERE username=? AND password=?"
+    cursor.execute(query, (username, password))
     user = cursor.fetchone()
 
     return {"message": "Login success" if user else "Invalid credentials"}
